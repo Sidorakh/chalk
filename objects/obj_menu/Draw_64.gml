@@ -1,6 +1,6 @@
-/// @description Insert description here
-// You can write your code in this editor
+/// @description Surface management
 
+//If the surface doesn't exist, re-draw eventhing
 if (!surface_exists(menu_surf)) {
 	menu_surf = surface_create(room_width,room_height);
 	if (init == true) {		// already made
@@ -21,6 +21,7 @@ if (!surface_exists(menu_surf)) {
 		draw_text(_cx/2,_cy+_cy/2,"Start Game");
 		draw_text(_cx/2+_cx,_cy+_cy/2,"Custom Levels");
 		
+		//Chalk marks on the words
 		gpu_set_blendmode(bm_subtract);
 		for (var _x=0;_x<room_width;_x+=16) {
 			for (var _y=0;_y<room_height;_y+=16) {

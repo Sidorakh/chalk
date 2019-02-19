@@ -1,2 +1,1 @@
-/// @description
-//nothing
+/// @description <none>

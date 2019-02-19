@@ -1,4 +1,3 @@
-/// @description Insert description here
-// You can write your code in this editor
+/// @description Garbage collection
 surface_free(mysurf);
 buffer_delete(mybuff);

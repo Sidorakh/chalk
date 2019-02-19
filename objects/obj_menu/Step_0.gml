@@ -1,4 +1,5 @@
-/// @description
+/// @description Main Menu
+//Draw with the mouse
 if (mouse_check_button(mb_left)) {
 	splat(mouse_x,mouse_y,16,irandom(360),(get_timer()/1000) mod 255,3);
 }
@@ -6,6 +7,7 @@ if (mouse_check_button(mb_left)) {
 //	room_goto_next();
 //}
 
+//Main menu logic
 if (mouse_check_button_pressed(mb_left)) {
 	var _cx = room_width/2;
 	var _cy = room_height/2;
@@ -20,7 +22,7 @@ if (mouse_check_button_pressed(mb_left)) {
 	}
 	
 	
-	
+	//Main menu text
 	draw_text(_cx/2,_cy+_cy/2,"Start Game");
 	draw_text(_cx/2+_cx,_cy+_cy/2,"Custom Levels");
 }

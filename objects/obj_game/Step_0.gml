@@ -1,4 +1,4 @@
-/// @description Paint blob things
+/// @description Paint blob logic
 for(var i=0;i<ds_list_size(global.splatters);i++) {
 	//Grab the array of the current blob
 	var _paint=global.splatters[|i];
@@ -12,6 +12,7 @@ for(var i=0;i<ds_list_size(global.splatters);i++) {
 		ds_queue_enqueue(trashcan,i);
 	}
 }
+//Delete destroyed blobs from the list
 while(ds_queue_size(trashcan)>0) {
 	ds_list_delete(global.splatters,ds_queue_dequeue(trashcan));
 }
