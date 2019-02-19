@@ -1,5 +1,5 @@
 /// @description Player state machine
-
+//Settings (middle click)
 #region Controls
 
 var rl = 0,
@@ -64,15 +64,16 @@ switch (state) {
             if (on_ground) {
 				//Grounded
                 vsp = jump_speed;
-                ystretch = 1.5;
+                ystretch = stretch_amount;
             } else if (air_jumps > 0) {
 				//Aerial + Splatter effect
-                for (var i = 0; i < 8; i++) {
+                for (var i = 0; i < jump_splat_num; i++) {
                     with(instance_create_layer(x, y, layer, obj_pellet)) {
-                        var newdir = (i * 45) + irandom_range(-10, 10);
-                        hsp = lengthdir_x(14, newdir);
-                        vsp = lengthdir_y(14, newdir);
-                        hue = other.hue;
+                        var newdir = (i * jump_splat_dir) + 
+							irandom_range(-jump_splat_rng, jump_splat_rng);
+                        hsp = lengthdir_x(jump_splat_spd, newdir);
+                        vsp = lengthdir_y(jump_splat_spd, newdir);
+                        hue = irandom(255);
                     }
                 }
                 air_jumps--;
@@ -127,7 +128,9 @@ switch (state) {
             state = States.wj;
         }
 		//Transition to normal state
-        if (on_ground || (!wall_right && !wall_left) || ((wall_right && ltime > 5) || (wall_left && rtime > 5))) {
+        if (on_ground || (!wall_right && !wall_left) || 
+			((wall_right && ltime > wall_slide_time) || 
+			(wall_left && rtime > wall_slide_time))) {
             state = States.normal;
         }
         break;
@@ -162,7 +165,7 @@ if (hsp != 0 || vsp != 0) {
     }
 }
 //Slowly change color
-hue += 0.4;
+hue += hue_change;
 
 #endregion
 
@@ -183,7 +186,7 @@ repeat(abs(vsp)) {
     if (!place_meeting(x, y + sign(vsp), obj_block)) {
         y += sign(vsp);
     } else {
-        xstretch = 1.5;
+        xstretch = stretch_amount;
         vsp = 0;
         break;
     }
@@ -194,8 +197,8 @@ repeat(abs(vsp)) {
 #region Extra
 
 //Handle the stretch animations
-xstretch = lerp(xstretch, 1, 0.2);
-ystretch = lerp(ystretch, 1, 0.2);
+xstretch = lerp(xstretch, 1, stretch_back);
+ystretch = lerp(ystretch, 1, stretch_back);
 
 #endregion
 

@@ -27,12 +27,20 @@ enum States{
 #macro air_jump_speed -13
 #macro max_fall_speed 10
 #macro wall_slide_speed 3
+#macro wall_slide_time 5
 #macro wj_in_hsp 8
 #macro wj_in_vsp -14
 #macro wj_in_time 10
 #macro wj_out_hsp 10
 #macro wj_out_vsp -7
 #macro wj_out_time 15
+#macro jump_splat_num 12
+#macro jump_splat_dir 360/jump_splat_num
+#macro jump_splat_spd 14
+#macro jump_splat_rng 10
+#macro stretch_amount 1.5
+#macro stretch_back 0.2
+#macro hue_change 0.4
 
 //Blocks
 #macro size 32

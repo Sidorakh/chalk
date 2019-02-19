@@ -4,4 +4,7 @@ if (instance_exists(obj_player)) {
 	var _y = clamp(obj_player.y - (vh)*3/4,0,room_height-vh);
 	
 	camera_set_view_pos(cam,_x,_y);
+} else {
+	//Reset camera if there is no player found
+	camera_set_view_pos(cam, 0, 0);
 }
