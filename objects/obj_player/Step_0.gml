@@ -168,3 +168,10 @@ xstretch = lerp(xstretch, 1, 0.2);
 ystretch = lerp(ystretch, 1, 0.2);
 
 #endregion
+
+if (y > room_height + sprite_height) {
+	x = xstart;
+	y = ystart;
+	hsp = 0;
+	vsp = 0;
+}
