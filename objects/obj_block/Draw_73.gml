@@ -5,10 +5,12 @@ if (!surface_exists(mysurf)) {
 }
 if (clear) {
 	clear=false;
-	surface_set_target(mysurf);
-	draw_clear_alpha(c_white,0);
-	surface_reset_target();
+	buffer_set_surface(mybuff,mysurf,0,0,0);
+	//surface_set_target(mysurf);
+	//draw_clear_alpha(c_white,0);
+	//surface_reset_target();
 }
 if (surface_exists(mysurf)) {
 	draw_surface(mysurf,x,y);
+	buffer_get_surface(mybuff,mysurf,0,0,0);
 }
