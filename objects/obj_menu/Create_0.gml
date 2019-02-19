@@ -1,4 +1,5 @@
 /// @description
+//Coordinates are based on the room size
 var width=720;
 var cx = room_width div 2;
 var cy = room_height div 2;
