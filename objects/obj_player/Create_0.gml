@@ -10,3 +10,6 @@ wj_timer=0;
 state=States.normal;
 rtime=0;
 ltime=0;
+controller=default_controller;
+image_xscale=player_size/sprite_width;
+image_yscale=player_size/sprite_height;

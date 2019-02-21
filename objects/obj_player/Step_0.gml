@@ -3,15 +3,24 @@
 #region Controls
 
 var rl = 0,
-    ud = 0,
+    up = 0,
     jump_hold = 0,
     on_ground = false,
     wall_right = false,
     wall_left = false;
 
 //Increase held time
-rtime = (keyboard_check(vk_right) || keyboard_check(ord("D"))) ? rtime + 1 : 0;
-ltime = (keyboard_check(vk_left) || keyboard_check(ord("A"))) ? ltime + 1 : 0;
+var gp_rl = gamepad_axis_value(controller, gp_axislh),
+var	gp_jump_press = gamepad_button_check_pressed(controller, gp_face1) ||
+					gamepad_button_check_pressed(controller, gp_face2) ||
+					gamepad_button_check_pressed(controller, gp_face3) ||
+					gamepad_button_check_pressed(controller, gp_face4);
+var gp_jump_hold =  gamepad_button_check(controller, gp_face1) ||
+					gamepad_button_check(controller, gp_face2) ||
+					gamepad_button_check(controller, gp_face3) ||
+					gamepad_button_check(controller, gp_face4);
+rtime = (keyboard_check(vk_right) || keyboard_check(ord("D")) || gp_rl>deadzone)  ? rtime + 1 : 0;
+ltime = (keyboard_check(vk_left)  || keyboard_check(ord("A")) || gp_rl<-deadzone) ? ltime + 1 : 0;
 
 //Newer inputs override older ones
 if (rtime > 0 && (ltime == 0 || rtime < ltime)) {
@@ -22,10 +31,16 @@ if (ltime > 0 && (rtime == 0 || ltime < rtime)) {
 }
 
 //Collect all input and certain collision checks
-ud = sign(keyboard_check_pressed(vk_down) - keyboard_check_pressed(vk_up) +
-    keyboard_check_pressed(ord("S")) - keyboard_check_pressed(ord("W")) -
-    keyboard_check_pressed(ord("X")));
-jump_hold = (keyboard_check(vk_up) || keyboard_check(ord("W")) || keyboard_check(ord("X")));
+up = keyboard_check_pressed(vk_up) ||
+     keyboard_check_pressed(ord("W")) ||
+     keyboard_check_pressed(ord("X")) ||
+	 gp_jump_press;
+ 
+jump_hold = keyboard_check(vk_up) || 
+			keyboard_check(ord("W")) || 
+			keyboard_check(ord("X")) ||
+			gp_jump_hold;
+
 on_ground = place_meeting(x, y + 1, obj_block);
 wall_right = place_meeting(x + 1, y, obj_block);
 wall_left = place_meeting(x - 1, y, obj_block);
@@ -59,27 +74,45 @@ switch (state) {
         }
 		//Max speed
         hsp = clamp(hsp, -max_hsp, max_hsp);
+		
 		//Jumping
-        if (ud == -1) {
+        if (up ) {
             if (on_ground) {
 				//Grounded
                 vsp = jump_speed;
                 ystretch = stretch_amount;
-            } else if (air_jumps > 0) {
+				
+            } else if ((wall_right && rl==1) || (wall_left && rl==-1)) {
+				//Wall jump (always IN not OUT)
+				if (wall_right) {
+					//Jump in to the left
+                    hsp = -wj_in_hsp;
+                    vsp = wj_in_vsp;
+                    wj_timer = wj_in_time;
+				} else if (wall_left) {
+					//Jump in to the right
+					hsp = wj_in_hsp;
+					vsp = wj_in_vsp;
+					wj_timer = wj_in_time;
+				}
+				
+			} else if (air_jumps > 0) {
 				//Aerial + Splatter effect
                 for (var i = 0; i < jump_splat_num; i++) {
                     with(instance_create_layer(x, y, layer, obj_pellet)) {
                         var newdir = (i * jump_splat_dir) + 
 							irandom_range(-jump_splat_rng, jump_splat_rng);
-                        hsp = lengthdir_x(jump_splat_spd, newdir);
-                        vsp = lengthdir_y(jump_splat_spd, newdir);
-                        hue = irandom(255);
+						var spd=random_range(jump_splat_spd_min,jump_splat_spd_max);
+                        hsp = lengthdir_x(spd, newdir);
+                        vsp = lengthdir_y(spd, newdir);
+                        hue = other.hue;
                     }
                 }
                 air_jumps--;
                 vsp = air_jump_speed;
             }
         }
+		
 		//Gravity
         if (!on_ground) {
             vsp = min(vsp + grav, max_fall_speed);
@@ -88,7 +121,7 @@ switch (state) {
                 vsp = jump_short;
             }
 			//Transition to wall slide state
-            if (vsp > 0 && ((wall_right) || (wall_left))) {
+            if (vsp > 0 && (wall_right || wall_left)) {
                 state = States.wall;
             }
         }
@@ -97,8 +130,11 @@ switch (state) {
 		//Lowered gravity
         vsp = min(vsp + grav, wall_slide_speed);
 		
+		//Set air jumps
+		air_jumps = 1;
+		
 		//Wall jump begin
-        if (ud == -1) {
+        if (up) {
             if (wall_right) {
                 if (rl == 1) {
 					//Jump in
@@ -161,7 +197,7 @@ switch (state) {
 //While moving, create paint blobs all around
 if (hsp != 0 || vsp != 0) {
     for (var i = 0; i < 4; i++) {
-        splat(x, y, random_range(10, 16), (i * 90) + irandom_range(-45, 45), hue % 255, random_range(2, 3));
+        splat(x, y, random_range(5, 7), (i * 90) + irandom_range(-45, 45), hue % 255, random_range(1, 1.5));
     }
 }
 //Slowly change color

@@ -8,7 +8,7 @@ var _interval = 30;
 //Splat the title
 for(var i=0;i<_interval;i++) {
 	for(var m=0;m<10;m++) {
-		splat(cx-(width/2)+(width/_interval)*i,cy-60+(m*12),24,irandom(360),i*10,3);
+		splat(cx-(width/2)+(width/_interval)*i,cy-60+(m*12),14,irandom(360),i*10,3);
 	}
 }
 
@@ -16,8 +16,8 @@ for(var i=0;i<_interval;i++) {
 for (var _x =0;_x<80;_x+=4){ 
 	for (var _y=0;_y<20;_y+=2) {
 		//ystart=542
-		splat(cx/2 - ((_x-40)/40)*160,542 + ((_y-10)/10)*5,24,irandom(360),_x*10,2);
-		splat(cx/2+cx - ((_x-40)/40)*160,542 + ((_y-10)/10)*5,24,irandom(360),_x*10,2);
+		splat(cx/2 - ((_x-40)/40)*160,542 + ((_y-10)/10)*5,7,irandom(360),_x*3,2);
+		splat(cx/2+cx - ((_x-40)/40)*160,542 + ((_y-10)/10)*5,7,irandom(360),_x*3,2);
 	}	
 }
 
